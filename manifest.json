@@ -1,0 +1,7 @@
+{
+  "name": "mg_selector1",
+  "id": 57715560640100,
+  "api": "1.0.0",
+  "main": "dist/main.js",
+  "ui": "dist/index.html"
+}
