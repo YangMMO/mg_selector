@@ -12,21 +12,22 @@
       <input type="text" placeholder="搜索图层名称" @input="inputValue" :value="searchValue">
     </div>
 
-    <!-- <div>
-      <div name="type-is">
+    <div>
+      <!-- <div name="type-is">
         <span>包含类型</span>
         <span>不包含类型</span>
-      </div>
+      </div> -->
       <ul name="type-select">
         <li
           v-for="(type, key) in types" 
           :key="key" 
-          class="tag-box p br"
+          :class="['p br tag-box', { active: activeType === key }]"
+          @click=" activeType = activeType === key ? '' : key "
         >
           {{ type.title_cn }}
         </li>
       </ul>
-    </div> -->
+    </div>
     <div class="check">
       <span><input type="checkbox" :checkedValue="exact" @click="exact= !exact">精确匹配</span>
     </div>
@@ -37,12 +38,12 @@
     </div>
 
     <div class="copyright">
-      <p><a href="https://www.mmoo.fun/" target="_blank">@MMOO.FUN</a> v0.1.0</p>
+      <p><a href="https://www.mmoo.fun/" target="_blank">@MMOO.FUN</a> V0.2.0 更新时间2022-4-11</p>
       <p>感谢MasterGo官方大佬: haomengyuan6 的帮助</p>
       <span>下一版本计划：</span>
       <ul class="next-updata">
-        <li>1.支持根据 当页面所有 或 当前选中图层 查找</li>
-        <li>2.支持类型查询</li>
+        <li>1.根据选中项查找</li>
+        <li>2.支持类型查询（已完成部分）</li>
       </ul>
     </div>
 
@@ -55,19 +56,17 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
-  setup() {
+  data() {
     return {
-      searchValue: '',
-      exact: false,
       types: {
+        FrameNode: {
+          title_cn: '画板(容器)'
+        },
         ComponentNode: {
           title_cn: '组件'
         },
         InstanceNode: {
-          title_cn: '组件'
-        },
-        FrameNode: {
-          title_cn: '画板(容器)'
+          title_cn: '实例'
         },
         GroupNode: {
           title_cn: '群组'
@@ -75,16 +74,49 @@ export default defineComponent({
         TextNode: {
           title_cn: '文本'
         },
-        BooleanOperationNode: {
-          title_cn: '布尔形状'
-        },
         PenNode: {
           title_cn: '钢笔形状'
         },
         LineNode: {
           title_cn: '直线'
-        }
-      }
+        },
+        StarNode: {
+          title_cn: '星型'
+        },
+        EllipseNode: {
+          title_cn: '圆形'
+        },
+        RectangleNode: {
+          title_cn: '矩形'
+        },
+        PolygonNode: {
+          title_cn: '多边形'
+        },
+        // BooleanOperationNode: {
+        //   title_cn: '布尔图层'
+        // },
+      },
+      activeType: '',
+      // NodeTypes: [
+      //     'GroupNode',
+      //     'FrameNode',
+      //     'PenNode',
+      //     'StarNode',
+      //     'LineNode',
+      //     'EllipseNode',
+      //     'PolygonNode',
+      //     'RectangleNode',
+      //     'TextNode',
+      //     'ComponentNode',
+      //     'InstanceNode',
+      //     'BooleanOperationNode'
+      // ]
+    }
+  },
+  setup() {
+    return {
+      searchValue: '',
+      exact: false,
     }
   },
   created() {
@@ -96,20 +128,25 @@ export default defineComponent({
       this.searchValue =  value
     },
     searchClick () {
-      if (this.searchValue === "") {
-        alert('请填入匹配值')
-        return
-      }
+      // if (this.searchValue === "") {
+      //   alert('请填入匹配值')
+      //   return
+      // }
       parent.postMessage({
         searchValue: this.searchValue,
-        exact: this.exact
+        exact: this.exact,
+        activeType: this.activeType,
       }, '*')
+    },
+    clg (param) {
+      console.log(param);
     }
   },
 })
 </script>
 
 <style>
+
 ul {
   padding: 0;
 }
@@ -118,7 +155,7 @@ li {
 }
 .page {
   /* width: 320px; */
-  height: ;
+  /* height: ; */
   padding: 20px;
   background: #fff;
   border: 1px #ededed solid;
@@ -154,8 +191,17 @@ input::-webkit-input-placeholder {
   color: rgb(175, 206, 182);
 }
 .tag-box {
-  background: rgb(126, 206, 144);
+  background: rgb(226, 243, 230);
+  color: rgb(149, 204, 160);
   cursor: pointer;
+}
+.tag-box:hover {
+  background: rgb(214, 248, 222);
+  color: rgb(30, 187, 61);
+}
+.tag-box.active {
+  background: rgb(0, 102, 22);
+  color: #fff;
 }
 .btn {
   width: 100%;
